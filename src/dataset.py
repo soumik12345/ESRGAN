@@ -1,11 +1,4 @@
-import os, random
-from glob import glob
-from tqdm import tqdm
-import tensorflow as tf
-
-
-
-import os, random
+import os, random, math
 from glob import glob
 from tqdm import tqdm
 import tensorflow as tf
@@ -131,6 +124,14 @@ class SRTfrecordDataset:
             self.parse_tfrecord(tfrecord_file),
             num_parallel_calls=tf.data.experimental.AUTOTUNE
         )
+        dataset = dataset.map(
+            Augmentation.flip_lr,
+            num_parallel_calls=tf.data.experimental.AUTOTUNE
+        )
+        dataset = dataset.map(
+            Augmentation.flip_ud,
+            num_parallel_calls=tf.data.experimental.AUTOTUNE
+        )
         dataset = dataset.batch(batch_size, drop_remainder=True)
         dataset = dataset.prefetch(
             buffer_size=tf.data.experimental.AUTOTUNE
@@ -242,3 +243,31 @@ class SRDataset:
                     ax.set_xlabel('High_Res_' + str(c + 1))
                     c += 1
         plt.show()
+
+
+class Augmentation:
+
+    def __init__(self):
+        pass
+    
+    @staticmethod
+    def flip_lr(img_1, img_2):
+        do_flip = tf.random.uniform([]) > 0.5
+        img_1 = tf.cond(do_flip, lambda: tf.image.flip_left_right(img_1), lambda: img_1)
+        img_2 = tf.cond(do_flip, lambda: tf.image.flip_left_right(img_2), lambda: img_2)
+        return img_1, img_2
+    
+    @staticmethod
+    def flip_ud(img_1, img_2):
+        do_flip = tf.random.uniform([]) > 0.5
+        img_1 = tf.cond(do_flip, lambda: tf.image.flip_up_down(img_1), lambda: img_1)
+        img_2 = tf.cond(do_flip, lambda: tf.image.flip_up_down(img_2), lambda: img_2)
+        return img_1, img_2
+    
+    @staticmethod
+    def rotate_90(img_1, img_2):
+        do_rotation = tf.random.uniform([])
+        angle = tf.random.uniform([]).numpy() * 3
+        img_1 = tf.cond(do_rotation, lambda: tf.image.rot90(img_1, k=math.ceil(angle)), lambda: img_1)
+        img_2 = tf.cond(do_rotation, lambda: tf.image.rot90(img_2, k=math.ceil(angle)), lambda: img_2)
+        return img_1, img_2
