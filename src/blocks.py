@@ -10,7 +10,7 @@ def kernel_regularizer(weight_decay=5e-4):
     return tf.keras.regularizers.l2(weight_decay)
 
 
-def _kernel_init(scale=1.0, seed=None):
+def kernel_initializer(scale=1.0, seed=None):
     '''He normal initializer with scale'''
     scale = 2. * scale
     return tf.keras.initializers.VarianceScaling(
@@ -54,8 +54,8 @@ class ResDenseBlock5C(tf.keras.layers.Layer):
         lrelu_f = functools.partial(tf.keras.layers.LeakyReLU, alpha=0.2)
         _Conv2DLayer = functools.partial(
             tf.keras.layers.Conv2D, kernel_size=3,
-            padding='same', kernel_initializer=_kernel_init(0.1),
-            bias_initializer='zeros', kernel_regularizer=_regularizer(wd)
+            padding='same', kernel_initializer=kernel_initializer(0.1),
+            bias_initializer='zeros', kernel_regularizer=kernel_regularizer(wd)
         )
         self.conv1 = _Conv2DLayer(filters=gc, activation=lrelu_f())
         self.conv2 = _Conv2DLayer(filters=gc, activation=lrelu_f())

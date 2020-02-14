@@ -10,8 +10,8 @@ def Generator(size, channels, cfg_net, gc=32, wd=0., name='Generator'):
     rrdb_f = functools.partial(ResInResDenseBlock, nf=nf, gc=gc, wd=wd)
     conv_f = functools.partial(
         tf.keras.layers.Conv2D, kernel_size=3, padding='same',
-        bias_initializer='zeros', kernel_initializer=_kernel_init(),
-        kernel_regularizer=_regularizer(wd)
+        bias_initializer='zeros', kernel_initializer=kernel_initializer(),
+        kernel_regularizer=kernel_regularizer(wd)
     )
     rrdb_truck_f = tf.keras.Sequential(
         [rrdb_f(name="RRDB_{}".format(i)) for i in range(nb)],
