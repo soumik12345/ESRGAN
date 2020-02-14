@@ -50,3 +50,56 @@ def Generator(size, channels, nf=64, nb=23, gc=32, wd=0., name='Generator'):
     fea = conv_f(filters=nf, activation=lrelu_f(), name='conv_hr')(fea)
     out = conv_f(filters=channels, name='conv_last')(fea)
     return tf.keras.Model(inputs, out, name=name)
+
+
+
+def Discriminator(size, channels, nf=64, wd=0., name='Discriminator'):
+    '''Discriminator
+    Params:
+        size        -> Input Size
+        channels    -> Input Channels
+        nf          -> Number of filters
+        wd          -> weight decay
+        name        -> Model Name
+    '''
+    lrelu_f = functools.partial(tf.keras.layers.LeakyReLU, alpha=0.2)
+    conv_k3s1_f = functools.partial(
+        tf.keras.layers.Conv2D,
+        kernel_size=3, strides=1, padding='same',
+        kernel_initializer=kernel_initializer(),
+        kernel_regularizer=kernel_regularizer(wd)
+    )
+    conv_k4s2_f = functools.partial(
+        tf.keras.layers.Conv2D,
+        kernel_size=4, strides=2, padding='same',
+        kernel_initializer=kernel_initializer(),
+        kernel_regularizer=kernel_regularizer(wd)
+    )
+    dese_f = functools.partial(
+        tf.keras.layers.Dense,
+        kernel_regularizer=kernel_regularizer(wd)
+    )
+    x = inputs = tf.keras.layers.Input(shape=(size, size, channels))
+    x = conv_k3s1_f(filters=nf, name='conv0_0')(x)
+    x = conv_k4s2_f(filters=nf, use_bias=False, name='conv0_1')(x)
+    x = lrelu_f()(tf.keras.layers.BatchNormalization(name='bn0_1')(x))
+    x = conv_k3s1_f(filters=nf * 2, use_bias=False, name='conv1_0')(x)
+    x = lrelu_f()(tf.keras.layers.BatchNormalization(name='bn1_0')(x))
+    x = conv_k4s2_f(filters=nf * 2, use_bias=False, name='conv1_1')(x)
+    x = lrelu_f()(tf.keras.layers.BatchNormalization(name='bn1_1')(x))
+    x = conv_k3s1_f(filters=nf * 4, use_bias=False, name='conv2_0')(x)
+    x = lrelu_f()(tf.keras.layers.BatchNormalization(name='bn2_0')(x))
+    x = conv_k4s2_f(filters=nf * 4, use_bias=False, name='conv2_1')(x)
+    x = lrelu_f()(tf.keras.layers.BatchNormalization(name='bn2_1')(x))
+    x = conv_k3s1_f(filters=nf * 8, use_bias=False, name='conv3_0')(x)
+    x = lrelu_f()(tf.keras.layers.BatchNormalization(name='bn3_0')(x))
+    x = conv_k4s2_f(filters=nf * 8, use_bias=False, name='conv3_1')(x)
+    x = lrelu_f()(tf.keras.layers.BatchNormalization(name='bn3_1')(x))
+    x = conv_k3s1_f(filters=nf * 8, use_bias=False, name='conv4_0')(x)
+    x = lrelu_f()(tf.keras.layers.BatchNormalization(name='bn4_0')(x))
+    x = conv_k4s2_f(filters=nf * 8, use_bias=False, name='conv4_1')(x)
+    x = lrelu_f()(tf.keras.layers.BatchNormalization(name='bn4_1')(x))
+    x = tf.keras.layers.Flatten()(x)
+    x = dese_f(units=100, activation=lrelu_f(), name='linear1')(x)
+    out = dese_f(units=1, name='linear2')(x)
+    return tf.keras.Model(inputs, out, name=name)
