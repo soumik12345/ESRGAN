@@ -3,9 +3,17 @@ import tensorflow as tf
 
 
 
-def Generator(size, channels, cfg_net, gc=32, wd=0., name='Generator'):
-    '''Generator Model'''
-    nf, nb = cfg_net['nf'], cfg_net['nb']
+def Generator(size, channels, nf=64, nb=23, gc=32, wd=0., name='Generator'):
+    '''Generator Model
+    Params:
+        size        -> Input Size
+        channels    -> Input Channels
+        nf          -> Number of filters
+        nb          -> Number of RRDB Blocks
+        gc          -> Filters in Residual Dense Block
+        wd          -> Weight Decay
+        name        -> Model Name
+    '''
     lrelu_f = functools.partial(tf.keras.layers.LeakyReLU, alpha=0.2)
     rrdb_f = functools.partial(ResInResDenseBlock, nf=nf, gc=gc, wd=wd)
     conv_f = functools.partial(
