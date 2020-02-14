@@ -48,3 +48,15 @@ def DiscriminatorLoss(type='relativistic'):
         return discriminator_loss_relativistic
     else:
         return discriminator_loss_vanilla
+
+
+
+def PixelLoss(type='l1'):
+    '''Pixel Loss
+    Reference:
+        type -> 'l1'/'l2' norm
+    '''
+    if type == 'l1':
+        return tf.keras.losses.MeanAbsoluteError()
+    else:
+        return tf.keras.losses.MeanSquaredError()
