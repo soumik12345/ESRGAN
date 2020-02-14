@@ -1,4 +1,78 @@
+import os, random
+from glob import glob
+from tqdm import tqdm
 import tensorflow as tf
+
+
+
+import os, random
+from glob import glob
+from tqdm import tqdm
+import tensorflow as tf
+
+
+
+class TFRecordCreator:
+
+    def __init__(self, hr_images_path, lr_images_path):
+        self.hr_images_path = hr_images_path
+        self.lr_images_path = lr_images_path
+    
+    def _byte_feature(self, val):
+        val = val.numpy() if isinstance(val, type(tf.constant(0))) else val
+        return tf.train.Feature(
+            bytes_list=tf.train.BytesList(
+                value=[val]
+            )
+        )
+    
+    def _float_feature(self, val):
+        return tf.train.Feature(
+            float_list=tf.train.FloatList(
+                value=[val]
+            )
+        )
+    
+    def _int64_feature(self, val):
+        return tf.train.Feature(
+            int64_list=tf.train.Int64List(
+                value=[val]
+            )
+        )
+    
+    def make_binary_example(self, image_name, hr_img_str, lr_img_str):
+        feature = {
+            'image/img_name': self._byte_feature(image_name),
+            'image/hr_image': self._byte_feature(hr_img_str),
+            'image/lr_image': self._byte_feature(lr_img_str)
+        }
+        return tf.train.Example(
+            features=tf.train.Features(
+                feature=feature
+            )
+        )
+    
+    def make_tfrecord_file(self, output_path):
+        samples = []
+        for hr_img_path in glob(self.hr_images_path + '/*.png'):
+            image_name = os.path.basename(hr_img_path).replace('.png', '')
+            lr_img_path = os.path.join(self.lr_images_path, image_name + 'x4.png')
+            samples.append((
+                image_name,
+                hr_img_path,
+                lr_img_path
+            ))
+        random.shuffle(samples)
+        with tf.io.TFRecordWriter(output_path) as writer:
+            for img_name, hr_img_path, lr_img_path in tqdm(samples):
+                hr_img_str = open(hr_img_path, 'rb').read()
+                lr_img_str = open(lr_img_path, 'rb').read()
+                tf_example = self.make_binary_example(
+                    str.encode(img_name),
+                    hr_img_str, lr_img_str
+                )
+                writer.write(tf_example.SerializeToString())
+
 
 
 class SRTfrecordDataset:
