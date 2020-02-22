@@ -58,10 +58,10 @@ class ResDenseBlock5C(tf.keras.layers.Layer):
             bias_initializer='zeros', kernel_regularizer=kernel_regularizer(wd)
         )
         self.conv1 = _Conv2DLayer(filters=gc, activation=lrelu_f())
-        self.conv2 = _Conv2DLayer(filters=gc, activation=lrelu_f())
-        self.conv3 = _Conv2DLayer(filters=gc, activation=lrelu_f())
-        self.conv4 = _Conv2DLayer(filters=gc, activation=lrelu_f())
-        self.conv5 = _Conv2DLayer(filters=nf, activation=lrelu_f())
+        self.conv2 = _Conv2DLayer(filters=gc + nf, activation=lrelu_f())
+        self.conv3 = _Conv2DLayer(filters=gc * 2 + nf, activation=lrelu_f())
+        self.conv4 = _Conv2DLayer(filters=gc * 3 + nf, activation=lrelu_f())
+        self.conv5 = _Conv2DLayer(filters=gc * 4 + nf, activation=lrelu_f())
 
     def call(self, x):
         x1 = self.conv1(x)
