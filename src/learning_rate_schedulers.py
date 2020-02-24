@@ -11,7 +11,7 @@ def MultiStepLR(initial_learning_rate, lr_steps, lr_rate, name='MultiStepLR'):
     )
 
 
-def CosineAnnealingLR_Restart(initial_learning_rate, t_period, lr_min):
+def CosineAnnealingLRRestart(initial_learning_rate, t_period, lr_min):
     '''Cosine annealing learning rate scheduler with restart'''
     return tf.keras.experimental.CosineDecayRestarts(
         initial_learning_rate=initial_learning_rate,
