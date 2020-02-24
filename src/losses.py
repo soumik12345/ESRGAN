@@ -95,6 +95,6 @@ def ContentLoss(type='l1', output_layer=54, before_act=True):
         preprocess_hr = tf.keras.applications.vgg19.preprocess_input(hr * 255.) / 12.75
         sr_features = feature_extration_model(preprocess_sr)
         hr_features = feature_extration_model(preprocess_hr)
-        return loss_func(hr_features, sr_features)
+        return loss_function(hr_features, sr_features)
     
     return content_loss

@@ -22,3 +22,4 @@ def get_checkpoint(model, optimizer, checkpoint_dir='./checkpoints/'):
         )
     else:
         print("Training from scratch....")
+    return checkpoint, checkpoint_manager
