@@ -1,8 +1,11 @@
-import os, random, math
+import numpy as np
 from glob import glob
 from tqdm import tqdm
+import os, random, math
 import tensorflow as tf
+from matplotlib import pyplot as plt
 
+AUTOTUNE = tf.data.experimental.AUTOTUNE
 
 
 class TFRecordCreator:
@@ -122,20 +125,18 @@ class SRTfrecordDataset:
         dataset = dataset.shuffle(buffer_size=buffer_size)
         dataset = dataset.map(
             self.parse_tfrecord(tfrecord_file),
-            num_parallel_calls=tf.data.experimental.AUTOTUNE
+            num_parallel_calls=AUTOTUNE
         )
         dataset = dataset.map(
             Augmentation.flip_lr,
-            num_parallel_calls=tf.data.experimental.AUTOTUNE
+            num_parallel_calls=AUTOTUNE
         )
         dataset = dataset.map(
             Augmentation.flip_ud,
-            num_parallel_calls=tf.data.experimental.AUTOTUNE
+            num_parallel_calls=AUTOTUNE
         )
         dataset = dataset.batch(batch_size, drop_remainder=True)
-        dataset = dataset.prefetch(
-            buffer_size=tf.data.experimental.AUTOTUNE
-        )
+        dataset = dataset.prefetch(buffer_size=AUTOTUNE)
         return dataset
 
 
