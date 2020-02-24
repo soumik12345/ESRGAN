@@ -1,6 +1,6 @@
 # ESRGAN
 
-Tensorflow implementation of ESRGAN.
+Tensorflow implementation of [ESRGAN](https://arxiv.org/abs/1809.00219).
 
 ## Pre-training Step Result
 
