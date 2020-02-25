@@ -35,7 +35,7 @@ def pretrain(
         dataset             -> Dataset Object
         generator           -> Generator Model
         optimizer           -> Generator Optimizer
-        pizel_loss          -> Pixel Loss Function
+        pixel_loss          -> Pixel Loss Function
         checkpoint          -> Checkpoint Object
         checkpoint_manager  -> Checkpoint Manager Object
         log_dir             -> Tensorboard Log Directory
