@@ -41,7 +41,7 @@ def pretrain(
         log_dir             -> Tensorboard Log Directory
     '''
     writer = tf.summary.create_file_writer(log_dir)
-    checkpoint, checkpoint_manager = get_checkpoint(
+    checkpoint, checkpoint_manager = get_checkpoint_pretrain(
         generator, optimizer,
         checkpoint_dir=checkpoint_dir
     )
