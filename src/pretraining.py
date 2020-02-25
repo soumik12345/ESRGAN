@@ -3,7 +3,7 @@ import tensorflow as tf
 
 
 
-def get_checkpoint(model, optimizer, checkpoint_dir='./checkpoints/'):
+def get_checkpoint_pretrain(model, optimizer, checkpoint_dir='./checkpoints/'):
     checkpoint = tf.train.Checkpoint(
         step=tf.Variable(0, name='step'),
         optimizer=optimizer, model=model
