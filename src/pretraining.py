@@ -54,8 +54,16 @@ def pretrain(
             losses['regular'] = tf.reduce_sum(generator.losses)
             losses['pixel'] = 1.0 * pixel_loss(hr, sr)
             total_loss = tf.add_n([l for l in losses.values()])
-        grads = tape.gradient(total_loss, generator.trainable_variables)
-        optimizer.apply_gradients(zip(grads, generator.trainable_variables))
+        grads = tape.gradient(
+            total_loss,
+            generator.trainable_variables
+        )
+        optimizer.apply_gradients(
+            zip(
+                grads,
+                generator.trainable_variables
+            )
+        )
         return total_loss, losses
 
     for (batch, (lr, hr)) in tqdm(enumerate(dataset)):
