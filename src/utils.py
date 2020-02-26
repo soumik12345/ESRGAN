@@ -1,3 +1,4 @@
+import numpy as np
 import tensorflow as tf
 from matplotlib import pyplot as plt
 
@@ -15,6 +16,9 @@ def set_memory_growth():
             # Memory growth must be set before GPUs have been initialized
             print(e)
 
+
+def convert_to_img(tensor):
+    return (np.squeeze(tensor.numpy()).clip(0, 1) * 255).astype(np.uint8)
             
             
 def visualize_batch(dataset, model=None):
@@ -44,7 +48,8 @@ def visualize_batch(dataset, model=None):
                 ax.imshow(y_batch[c])
                 ax.set_xlabel('High_Res_' + str(c + 1))
             elif i % 3 == 2:
-                ax.imshow(np.squeeze(SRTfrecordDataset.denormalize(model(np.expand_dims(x_batch[c], axis=0)))))
+                pred = np.squeeze(model(np.expand_dims(x_batch[c], axis=0)))
+                ax.imshow(convert_to_img(pred))
                 ax.set_xlabel('High_Res_' + str(c + 1))
                 c += 1
     plt.show()
