@@ -17,8 +17,8 @@ def set_memory_growth():
             print(e)
 
 
-def convert_to_img(tensor):
-    return (np.squeeze(tensor.numpy()).clip(0, 1) * 255).astype(np.uint8)
+def denormalize(tensor):
+    return tf.cast(255 * (tensor + 1.0) / 2.0, tf.uint8)
             
             
 def visualize_batch(dataset, model=None):
@@ -49,7 +49,7 @@ def visualize_batch(dataset, model=None):
                 ax.set_xlabel('High_Res_' + str(c + 1))
             elif i % 3 == 2:
                 pred = np.squeeze(model(np.expand_dims(x_batch[c], axis=0)))
-                ax.imshow(convert_to_img(pred))
+                ax.imshow(denormalize(pred))
                 ax.set_xlabel('High_Res_' + str(c + 1))
                 c += 1
     plt.show()

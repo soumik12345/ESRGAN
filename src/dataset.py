@@ -102,7 +102,9 @@ class SRTfrecordDataset:
         return lr_image, hr_image
     
     def normalize(self, lr_image, hr_image):
-        return lr_image / 255, hr_image / 255
+        lr_image = tf.cast(lr_image, dtype=tf.float32)
+        hr_image = tf.cast(hr_image, dtype=tf.float32)
+        return lr_image * 2.0 - 1.0, hr_image  * 2.0 - 1.0
     
     def parse_tfrecord(self, tfrecord_file):
         def parse(tfrecord):
