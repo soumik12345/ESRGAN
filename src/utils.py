@@ -23,7 +23,7 @@ def denormalize(tensor):
 
 def denormalize_prediction(tensor):
     return tf.cast(255 * (tensor + 1.0) / 2.0, tf.uint8)
-            
+
             
 def visualize_batch(dataset, model=None):
     x_batch, y_batch = next(iter(dataset))
