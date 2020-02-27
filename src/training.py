@@ -38,7 +38,7 @@ def get_checkpoint_train(models, optimizers, checkpoint_dir='./checkpoints/'):
 
 def train(
     dataset, models, optimizers, loss_functions, epochs, save_interval=5,
-    checkpoint_dir='./models/pretrain/', log_dir='./logs/pretrain'):
+    checkpoint_dir='./models/pretrain/', log_dir='./logs/train'):
     '''ESRGAN Train
     Params:
         dataset         -> Dataset Object
@@ -109,9 +109,9 @@ def train(
                     tf.summary.scalar('loss_D/{}'.format(k), l, step=steps)
                 tf.summary.scalar('learning_rate/learning_rate_G', optimizer_G.lr(steps), step=steps)
                 tf.summary.scalar('learning_rate/learning_rate_D', optimizer_D.lr(steps), step=steps)
-                tf.summary.image('Low Res', denormalize(x), step=iterations)
-                tf.summary.image('High Res', denormalize(y), step=iterations)
-                tf.summary.image('Generated', denormalize_prediction(generator(x)), step=iterations)
+                tf.summary.image('Low Res', denormalize(lr), step=steps)
+                tf.summary.image('High Res', denormalize(hr), step=steps)
+                tf.summary.image('Generated', denormalize_prediction(generator(lr)), step=steps)
         if epoch % save_interval == 0:
             checkpoint_manager.save()
             print(
