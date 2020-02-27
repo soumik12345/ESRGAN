@@ -1,4 +1,5 @@
 from tqdm import tqdm
+from .utils import *
 import tensorflow as tf
 
 
@@ -108,6 +109,9 @@ def train(
                     tf.summary.scalar('loss_D/{}'.format(k), l, step=steps)
                 tf.summary.scalar('learning_rate/learning_rate_G', optimizer_G.lr(steps), step=steps)
                 tf.summary.scalar('learning_rate/learning_rate_D', optimizer_D.lr(steps), step=steps)
+                tf.summary.image('Low Res', denormalize(x), step=iterations)
+                tf.summary.image('High Res', denormalize(y), step=iterations)
+                tf.summary.image('Generated', denormalize_prediction(generator(x)), step=iterations)
         if epoch % save_interval == 0:
             checkpoint_manager.save()
             print(
