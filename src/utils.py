@@ -18,6 +18,10 @@ def set_memory_growth():
 
 
 def denormalize(tensor):
+    return tf.cast((tensor + 1.0) / 2.0, tf.uint8)
+
+
+def denormalize_prediction(tensor):
     return tf.cast(255 * (tensor + 1.0) / 2.0, tf.uint8)
             
             
@@ -31,10 +35,10 @@ def visualize_batch(dataset, model=None):
         plt.setp(axes.flat, xticks = [], yticks = [])
         for i, ax in enumerate(axes.flat):
             if i % 2 == 0:
-                ax.imshow(x_batch[c])
+                ax.imshow(denormalize(x_batch[c]))
                 ax.set_xlabel('Low_Res_' + str(c + 1))
             elif i % 2 == 1:
-                ax.imshow(y_batch[c])
+                ax.imshow(denormalize(y_batch[c]))
                 ax.set_xlabel('High_Res_' + str(c + 1))
                 c += 1
     else:
@@ -42,14 +46,14 @@ def visualize_batch(dataset, model=None):
         plt.setp(axes.flat, xticks = [], yticks = [])
         for i, ax in enumerate(axes.flat):
             if i % 3 == 0:
-                ax.imshow(x_batch[c])
+                ax.imshow(denormalize(x_batch[c]))
                 ax.set_xlabel('Low_Res_' + str(c + 1))
             elif i % 3 == 1:
-                ax.imshow(y_batch[c])
+                ax.imshow(denormalize(y_batch[c]))
                 ax.set_xlabel('High_Res_' + str(c + 1))
             elif i % 3 == 2:
                 pred = np.squeeze(model(np.expand_dims(x_batch[c], axis=0)))
-                ax.imshow(denormalize(pred))
+                ax.imshow(denormalize_prediction(pred))
                 ax.set_xlabel('High_Res_' + str(c + 1))
                 c += 1
     plt.show()
