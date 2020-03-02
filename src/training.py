@@ -100,8 +100,8 @@ def train(
     for epoch in range(1, epochs + 1):
         print('Epoch: {}'.format(epoch))
         for (batch, (lr, hr)) in tqdm(enumerate(dataset)):
+            steps += 1
             total_loss_G, total_loss_D, losses_G, losses_D = train_step(lr, hr)
-            # print(total_loss_G, total_loss_D, losses_G, losses_D)
             with writer.as_default():
                 tf.summary.scalar('loss_G/total_loss', total_loss_G.numpy(), step=steps)
                 tf.summary.scalar('loss_D/total_loss', total_loss_D.numpy(), step=steps)
