@@ -4,7 +4,7 @@ import tensorflow as tf
 
 
 
-def get_checkpoint_train(models, optimizers, checkpoint_dir='./checkpoints/'):
+def get_checkpoint_train(models, optimizers, checkpoint_dir='./train_checkpoints/'):
     '''Get Training Checkpoints
     Params:
         models          -> [generator, discriminator]

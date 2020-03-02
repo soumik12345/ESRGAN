@@ -57,3 +57,29 @@ def visualize_batch(dataset, model=None):
                 ax.set_xlabel('High_Res_' + str(c + 1))
                 c += 1
     plt.show()
+
+
+
+def network_interpolation(model, pretrain_ckpt_path, train_ckpt_path, alpha):
+    
+    def update_weight(model, vars1, vars2, alpha):
+        for i, var in enumerate(model.trainable_variables):
+            var.assign((1 - alpha) * vars1[i] + alpha * vars2[i])
+        return model
+    
+    ckpt_1 = tf.train.Checkpoint(model=model)
+    if tf.train.latest_checkpoint(pretrain_ckpt_path):
+        ckpt_1.restore(tf.train.latest_checkpoint(pretrain_ckpt_path))
+    else:
+        print('Cannot find checkpoint')
+    
+    ckpt_2 = tf.train.Checkpoint(model=model)
+    if tf.train.latest_checkpoint(train_ckpt_path):
+        ckpt_2.restore(tf.train.latest_checkpoint(train_ckpt_path))
+    else:
+        print('Cannot find checkpoint')
+    
+    variables_1 = [v.numpy() for v in ckpt_1.model.trainable_variables]
+    variables_2 = [v.numpy() for v in ckpt_2.model.trainable_variables]
+
+    return update_weight(model, variables_1, variables_2, alpha)
