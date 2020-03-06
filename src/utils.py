@@ -1,3 +1,4 @@
+import os
 import numpy as np
 from PIL import Image
 import tensorflow as tf
@@ -92,10 +93,10 @@ def get_all_crops(image_file, cache_location, patch_size, stride):
     image = np.array(image)
     height, width, _ = image.shape
     i, c = 0, 0
-    save_location = image_file[:-4]
+    save_location = os.path.join(cache_location, image_file[:-4])
     print(save_location)
     try:
-        os.mkdir(os.path.join(cache_location, save_location))
+        os.mkdir(save_location)
     except:
         pass
     while i < width:
