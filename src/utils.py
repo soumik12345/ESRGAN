@@ -88,7 +88,7 @@ def network_interpolation(model, pretrain_ckpt_path, train_ckpt_path, alpha):
 
 
 
-def get_all_crops(image_file, cache_location, patch_size, stride):
+def save_all_crops(image_file, cache_location, patch_size, stride):
     image = Image.open(image_file)
     image = np.array(image)
     height, width, _ = image.shape
@@ -109,3 +109,19 @@ def get_all_crops(image_file, cache_location, patch_size, stride):
                 patch.save(os.path.join(save_location, str(c) + '.png'))
             j += stride
         i += stride
+
+
+
+def get_all_crops(image, patch_size, stride):
+    height, width, _ = image.shape
+    i = 0
+    patches = []
+    while i < width:
+        j = 0
+        while j < height:
+            patch = np.asarray(image[j:patch_size + j, i:patch_size + i, :])
+            if patch.shape == (patch_size, patch_size, 3):
+                patches.append(patch)
+            j += stride
+        i += stride
+    return patches
