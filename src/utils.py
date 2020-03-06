@@ -1,4 +1,5 @@
 import numpy as np
+from PIL import Image
 import tensorflow as tf
 from matplotlib import pyplot as plt
 
@@ -86,7 +87,7 @@ def network_interpolation(model, pretrain_ckpt_path, train_ckpt_path, alpha):
 
 
 
-def get_all_crops(image_file, patch_size, stride):
+def get_all_crops(image_file, cache_location, patch_size, stride):
     image = Image.open(image_file)
     image = np.array(image)
     height, width, _ = image.shape
@@ -94,7 +95,7 @@ def get_all_crops(image_file, patch_size, stride):
     save_location = image_file[:-4]
     print(save_location)
     try:
-        os.mkdir(save_location)
+        os.mkdir(os.path.join(cache_location, save_location))
     except:
         pass
     while i < width:
