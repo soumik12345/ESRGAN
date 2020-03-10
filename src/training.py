@@ -18,7 +18,7 @@ def get_checkpoint_train(models, optimizers, checkpoint_dir='./train_checkpoints
     checkpoint_manager = tf.train.CheckpointManager(
         checkpoint=checkpoint,
         directory=checkpoint_dir,
-        max_to_keep=3
+        max_to_keep=5
     )
     if checkpoint_manager.latest_checkpoint:
         checkpoint.restore(checkpoint_manager.latest_checkpoint)

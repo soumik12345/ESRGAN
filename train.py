@@ -1,3 +1,5 @@
+import logging
+from src.utils import *
 from src.losses import *
 from src.models import *
 from src.dataset import *
@@ -10,23 +12,30 @@ class Trainer:
 
     def __init__(self, config_file):
         self.config = parse_config(config_file)
+        logging.info('Setting Memory Growth')
         set_memory_growth()
+        logging.info('Creating tfrecord file')
         self.create_tfrecord()
+        logging.info('Preparing Dataset')
         self.dataset = self.get_dataset()
+        logging.info('Creating Generator Model')
         self.generator = Generator(
-            self.config['hr_patch_size'] / 4,
+            self.config['hr_patch_size'] // 4,
             self.config['n_channels']
         )
+        logging.info('Creating Discriminator Model')
         self.discriminator = Discriminator(
             self.config['hr_patch_size'],
             self.config['n_channels']
         )
+        logging.info('Pretraining Generator with Pixel Loss')
         (
             self.pretrain_checkpoint,
             self.pretrain_checkpoint_manager,
             self.generator,
             self.pretrain_gen_optimizer
         ) = self.pre_train()
+        logging.info('Training Generator and Discriminator')
         (
             self.checkpoint,
             self.checkpoint_manager,
@@ -102,7 +111,7 @@ class Trainer:
             [pixel_loss_fn, fea_loss_fn, gen_loss_fn, dis_loss_fn],
             self.config['train']['epochs'],
             save_interval=self.config['train']['save_interval'],
-            checkpoint_dir=self.config['train']['save_interval'],
+            checkpoint_dir=self.config['train']['checkpoint_dir'],
             log_dir=self.config['train']['log_dir']
         )
         return checkpoint, checkpoint_manager, generator, discriminator, optimizer_G, optimizer_D
