@@ -125,3 +125,10 @@ def get_all_crops(image, patch_size, stride):
             j += stride
         i += stride
     return patches
+
+
+
+def parse_config(json_file):
+    with open(json_file, 'r') as f:
+        configs = json.load(f)
+    return configs

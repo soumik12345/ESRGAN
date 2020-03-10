@@ -1,0 +1,23 @@
+{
+    "hr_img_path": "../DIV2K_train_HR/*",
+    "lr_img_path": "../DIV2K_train_LR/*",
+    "tfrecord_file": "div2d_4x_bicubic.tfrecord",
+    "hr_patch_size": 256,
+    "downsample_scale": 4,
+    "batch_size": 8,
+    "buffer_size": 128,
+    "n_channels": 3,
+    "pretrain": {
+        "lr_schedulers_pretrain": {
+            "initial_learning_rate": 2e-4,
+            "lr_steps": [200000, 400000, 600000, 800000],
+            "lr_rate": 0.5
+        },
+        "optimizer": {
+            "beta_1": 0.9,
+            "beta_2": 0.99
+        },
+        "checkpoint_dir": "./models/pretrain/",
+        "log_dir": "./logs/pretrain/"
+    }
+}
