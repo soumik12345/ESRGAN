@@ -3,18 +3,16 @@ from .utils import *
 import tensorflow as tf
 
 
-
 def get_checkpoint_train(models, optimizers, checkpoint_dir='./train_checkpoints/'):
     '''Get Training Checkpoints
     Params:
         models          -> [generator, discriminator]
         optimizers      -> [gen_optimizer, dis_optimizer]
         checkpoint_dir  -> Checkpoint Directory
-
     '''
     checkpoint = tf.train.Checkpoint(
         step=tf.Variable(0, name='step'),
-        gen_model = models[0], dis_model = models[1],
+        gen_model=models[0], dis_model=models[1],
         gen_optimizer=optimizers[0], dis_optimizer=optimizers[1]
     )
     checkpoint_manager = tf.train.CheckpointManager(
@@ -35,10 +33,9 @@ def get_checkpoint_train(models, optimizers, checkpoint_dir='./train_checkpoints
     return checkpoint, checkpoint_manager
 
 
-
 def train(
-    dataset, models, optimizers, loss_functions, epochs, save_interval=5,
-    checkpoint_dir='./models/pretrain/', log_dir='./logs/train'):
+        dataset, models, optimizers, loss_functions, epochs, save_interval=5,
+        checkpoint_dir='./models/pretrain/', log_dir='./logs/train'):
     '''ESRGAN Train
     Params:
         dataset         -> Dataset Object
@@ -95,7 +92,7 @@ def train(
             )
         )
         return total_loss_G, total_loss_D, losses_G, losses_D
-    
+
     steps = 0
     for epoch in range(1, epochs + 1):
         print('Epoch: {}'.format(epoch))
@@ -121,5 +118,5 @@ def train(
                     checkpoint_manager.latest_checkpoint
                 )
             )
-    
+
     return checkpoint, checkpoint_manager, generator, discriminator, optimizer_G, optimizer_D

@@ -1,12 +1,9 @@
-import tensorflow as tf
-from src.utils import *
 from src.losses import *
 from src.models import *
 from src.dataset import *
 from src.training import *
 from src.pretraining import *
 from src.learning_rate_schedulers import *
-
 
 
 class Trainer:
