@@ -64,3 +64,30 @@ class Trainer:
             log_dir=self.config['pretrain']['log_dir']
         )
         return checkpoint, checkpoint_manager, generator, gen_optimizer
+
+    def train(self):
+        gen_lr = MultiStepLR(
+            float(self.config['train']['generator']['lr_scheduler']['initial_learning_rate']),
+            self.config['train']['generator']['lr_scheduler']['lr_steps'],
+            self.config['train']['generator']['lr_scheduler']['lr_rate']
+        )
+        dis_lr = MultiStepLR(
+            float(self.config['train']['discriminator']['lr_scheduler']['initial_learning_rate']),
+            self.config['train']['discriminator']['lr_scheduler']['lr_steps'],
+            self.config['train']['discriminator']['lr_scheduler']['lr_rate']
+        )
+        optimizer_G = tf.keras.optimizers.Adam(
+            learning_rate=gen_lr,
+            beta_1=self.config['train']['generator']['optimizer']['beta_1'],
+            beta_2=self.config['train']['generator']['optimizer']['beta_2']
+        )
+        optimizer_D = tf.keras.optimizers.Adam(
+            learning_rate=gen_lr,
+            beta_1=self.config['train']['discriminator']['optimizer']['beta_1'],
+            beta_2=self.config['train']['discriminator']['optimizer']['beta_2']
+        )
+        pixel_loss_fn = PixelLoss()
+        fea_loss_fn = ContentLoss()
+        gen_loss_fn = GeneratorLoss()
+        dis_loss_fn = DiscriminatorLoss()
+
