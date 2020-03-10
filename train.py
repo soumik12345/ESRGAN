@@ -3,6 +3,7 @@ from src.utils import *
 from src.losses import *
 from src.models import *
 from src.dataset import *
+from src.training import *
 from src.pretraining import *
 from src.learning_rate_schedulers import *
 
@@ -29,6 +30,14 @@ class Trainer:
             self.generator,
             self.pretrain_gen_optimizer
         ) = self.pre_train()
+        (
+            self.checkpoint,
+            self.checkpoint_manager,
+            self.generator,
+            self.discriminator,
+            self.optimizer_G,
+            self.optimizer_D
+        ) = self.train()
 
     def create_tfrecord(self):
         tfrecord_creator = TFRecordCreator(
@@ -90,4 +99,13 @@ class Trainer:
         fea_loss_fn = ContentLoss()
         gen_loss_fn = GeneratorLoss()
         dis_loss_fn = DiscriminatorLoss()
-
+        checkpoint, checkpoint_manager, generator, discriminator, optimizer_G, optimizer_D = train(
+            self.dataset, [self.generator, self.discriminator],
+            [optimizer_G, optimizer_D],
+            [pixel_loss_fn, fea_loss_fn, gen_loss_fn, dis_loss_fn],
+            self.config['train']['epochs'],
+            save_interval=self.config['train']['save_interval'],
+            checkpoint_dir=self.config['train']['save_interval'],
+            log_dir=self.config['train']['log_dir']
+        )
+        return checkpoint, checkpoint_manager, generator, discriminator, optimizer_G, optimizer_D

@@ -42,6 +42,10 @@
                 "beta_1": 0.9,
                 "beta_2": 0.99
             }
-        }
+        },
+        "epochs": 100,
+        "save_interval": 5,
+        "checkpoint_dir": "./models/pretrain/",
+        "log_dir": "./logs/train"
     }
 }
