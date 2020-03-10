@@ -1,6 +1,6 @@
 {
     "hr_img_path": "../DIV2K_train_HR/*",
-    "lr_img_path": "../DIV2K_train_LR/*",
+    "lr_img_path": "../DIV2K_train_LR_bicubic/X4/*",
     "tfrecord_file": "div2d_4x_bicubic.tfrecord",
     "hr_patch_size": 256,
     "downsample_scale": 4,
