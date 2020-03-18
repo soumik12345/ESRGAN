@@ -1,5 +1,6 @@
 import os, json
 import numpy as np
+from glob import  glob
 from PIL import Image
 import tensorflow as tf
 from matplotlib import pyplot as plt
@@ -127,3 +128,10 @@ def parse_config(json_file):
     with open(json_file, 'r') as f:
         configs = json.load(f)
     return configs
+
+
+def rename(path):
+    img_path_l = glob(os.path.join(path, '*'))
+    for img_path in img_path_l:
+        new_path = img_path.replace('x2', '').replace('x3', '').replace('x4', '').replace('x8', '')
+        os.rename(img_path, new_path)
