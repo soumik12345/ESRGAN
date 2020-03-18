@@ -96,7 +96,7 @@ def train(
     steps = 0
     for epoch in range(1, epochs + 1):
         print('Epoch: {}'.format(epoch))
-        for (batch, (lr, hr)) in tqdm(enumerate(dataset)):
+        for (batch, (lr, hr)) in tqdm(enumerate(dataset.take(1000000))):
             steps += 1
             total_loss_G, total_loss_D, losses_G, losses_D = train_step(lr, hr)
             with writer.as_default():
